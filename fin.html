@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <!-- Meta Viewport optimisée mobile avec support de l'encoche iPhone (notch) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Support Web App iOS & Android -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#fbc2eb">
+    
+    <title>Une surprise pour Maman ! ❤️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur mobile */
+        }
+
+        body {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            min-height: 100vh;
+            /* Prise en compte de la barre du bas/haut des smartphones */
+            min-height: -webkit-fill-available;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: calc(15px + env(safe-area-inset-top)) env(safe-area-inset-right) calc(15px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        html {
+            height: -webkit-fill-available;
+        }
+
+        /* --- ENVELOPPE MOBILES --- */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 210px;
+            background: #e056fd;
+            border-radius: 0 0 15px 15px;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            margin: 0 auto;
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 160px solid #be2edd;
+            border-right: 160px solid #be2edd;
+            border-top: 105px solid transparent;
+            border-bottom: 105px solid #be2edd;
+            border-radius: 0 0 15px 15px;
+            z-index: 2;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 120px solid #e056fd;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 3;
+        }
+
+        .open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-text {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0 10px;
+            z-index: 4;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* --- CARTE RESPONSIVE --- */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 25px 20px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* PHOTO ADAPTÉE ÉCRANS MOBILES */
+        .photo-container {
+            margin: 15px auto;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #d63384;
+            box-shadow: 0 8px 20px rgba(214, 51, 132, 0.25);
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 1.75rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .message {
+            line-height: 1.5;
+            font-size: 0.95rem;
+            background: #fff0f5;
+            padding: 16px;
+            border-radius: 16px;
+            border-left: 4px solid #d63384;
+            margin-bottom: 15px;
+            text-align: left;
+            color: #333;
+        }
+
+        .surprise-box {
+            background: #e3f2fd;
+            border: 2px dashed #2196f3;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .surprise-box:active {
+            background: #bbdefb;
+        }
+
+        .surprise-title {
+            font-weight: 600;
+            color: #1976d2;
+            font-size: 0.95rem;
+        }
+
+        .surprise-content {
+            display: none;
+            color: #0d47a1;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 5px;
+            animation: popIn 0.4s ease;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column; /* Boutons empilés pour une meilleure ergonomie tactile */
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn {
+            background-color: #d63384;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3);
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #6c5ce7;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        .heart {
+            font-size: 2.5rem;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- L'ENVELOPPE AU DEPART -->
+    <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()">
+        <div class="envelope" id="envelope">
+            <div class="flap"></div>
+            <div class="envelope-text">✉️ Touchez pour ouvrir, Maman !</div>
+        </div>
+    </div>
+
+    <!-- LA CARTE OPTIMISÉE MOBILE -->
+    <div class="card" id="card">
+        <div class="heart">💖</div>
+        <h1>Joyeux Anniversaire Maman !</h1>
+        <p class="subtitle">(Pardonne mon petit retard du 6 août... 🙈)</p>
+
+        <!-- PHOTO DE MAMAN -->
+        <div class="photo-container">
+            <img src="VOTRE_PHOTO.jpg" alt="Photo de Maman">
+        </div>
+
+        <div class="message">
+            <p>Ma chère Maman,</p><br>
+            <p>Je sais que ton anniversaire était le <strong>6 août</strong> et que la date est passée... Je suis vraiment désolé(e) pour cet oubli ! 🙏</p><br>
+            <p>Sache que mon amour pour toi reste immense chaque jour de l'année. Merci pour tout ce que tu fais au quotidien, ton soutien et ta gentillesse.</p><br>
+            <p>Tu es la meilleure des mamans ! ❤️</p>
+        </div>
+
+        <!-- SURPRISE INTERACTIVE -->
+        <div class="surprise-box" onclick="revealSurprise(this)">
+            <div class="surprise-title">🎁 Une surprise vous attend ici !</div>
+            <p style="font-size:0.8rem; color:#666;" id="clickHint">(Touchez pour découvrir le cadeau)</p>
+            <div class="surprise-content" id="surpriseContent">
+                🎟️ BON POUR : Un délicieux repas de soirée + un gros câlin illimité ! 🍽️✨
+            </div>
+        </div>
+
+        <!-- BOUTONS TACTILES -->
+        <div class="btn-group">
+            <button class="btn" onclick="triggerConfetti()">🎉 Lancer la fête !</button>
+            <button class="btn btn-secondary" onclick="sendLove()">❤️ Envoyer plein de surprise</button>
+        </div>
+    </div>
+
+    <script>
+        function vibrate() {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(50); // Petite vibration tactile sur Android
+            }
+        }
+
+        function openEnvelope() {
+            vibrate();
+            const envelope = document.getElementById('envelope');
+            const wrapper = document.getElementById('envelopeWrapper');
+            const card = document.getElementById('card');
+
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                wrapper.style.display = 'none';
+                card.classList.add('show');
+                triggerConfetti();
+            }, 600);
+        }
+
+        function revealSurprise(element) {
+            vibrate();
+            const content = document.getElementById('surpriseContent');
+            const hint = document.getElementById('clickHint');
+            content.style.display = 'block';
+            hint.style.display = 'none';
+            element.style.borderColor = '#4caf50';
+            element.style.background = '#e8f5e9';
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            vibrate();
+            const symbols = ['🎉', '✨', '💖', '🌸', '🎂', '🥳'];
+            for (let i = 0; i < 35; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = '-20px';
+                particle.style.fontSize = (Math.random() * 18 + 14) + 'px';
+                
+                document.body.appendChild(particle);
+
+                const duration = Math.random() * 2.5 + 1.5;
+                particle.animate([
+                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'ease-out'
+                });
+
+                setTimeout(() => particle.remove(), duration * 1000);
+            }
+        }
+
+        function sendLove() {
+            vibrate();
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'particle';
+                heart.innerText = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.bottom = '0px';
+                heart.style.fontSize = (Math.random() * 22 + 14) + 'px';
+                
+                document.body.appendChild(heart);
+
+                const duration = Math.random() * 2 + 1.5;
+                heart.animate([
+                    { transform: `translateY(0) scale(1)`, opacity: 1 },
+                    { transform: `translateY(-100vh) scale(1.4)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'ease-out'
+                });
+
+                setTimeout(() => heart.remove(), duration * 1000);
+            }
+        }
+    </script>
+</body>
+</html>

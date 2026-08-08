@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pour la meilleure des mamans ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+     <audio id="bgMusic" loop src="cool.mp3"></audio>
+    <style>
+        :root {
+            --primary: #d90429;
+            --primary-light: #ef233c;
+            --accent: #ffb703;
+            --bg-grad-1: #1a0005;
+            --bg-grad-2: #3d000f;
+            --envelope-bg: #2b000a;
+            --paper-bg: #fffbf2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            perspective: 1000px;
+        }
+
+        /* Arrière-plan magique */
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(239,35,60,0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Titre d'introduction */
+        .intro-title {
+            position: absolute;
+            top: 8%;
+            text-align: center;
+            color: #fff;
+            z-index: 10;
+            transition: all 1s ease;
+        }
+
+        .intro-title h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+            margin-bottom: 5px;
+        }
+
+        .intro-title p {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* --- CONTAINER ENVELOPPE CINÉMATIQUE --- */
+        .scene {
+            position: relative;
+            width: 450px;
+            height: 300px;
+            z-index: 5;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+        }
+
+        .envelope-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--envelope-bg);
+            border-radius: 12px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.4);
+            transform-style: preserve-3d;
+        }
+
+        /* Rabat supérieur */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            border-top: 160px solid var(--primary-light);
+            border-left: 225px solid transparent;
+            border-right: 225px solid transparent;
+            border-radius: 12px 12px 0 0;
+            transform-origin: top;
+            z-index: 4;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Formes intérieures de l'enveloppe */
+        .pocket {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(200deg, var(--primary) 0%, var(--envelope-bg) 70%);
+            border-radius: 12px;
+            border-bottom: 4px solid rgba(255,255,255,0.1);
+            z-index: 3;
+        }
+       
+
+        .pocket::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            border-bottom: 150px solid rgba(0,0,0,0.15);
+            border-left: 450px solid transparent;
+        }
+
+        /* --- LA LETTRE LUXUEUSE --- */
+        .letter {
+            position: absolute;
+            bottom: 15px;
+            left: 25px;
+            width: 400px;
+            height: 270px;
+            background: var(--paper-bg);
+            background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+            border-radius: 8px;
+            padding: 35px;
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .letter-content h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .letter-content p {
+            font-size: 1.05rem;
+            color: #2b2d42;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Sceau en Or */
+        .seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -20%) scale(1);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ffe49e 0%, var(--accent) 100%);
+            border-radius: 50%;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.8rem;
+        }
+
+        /* --- ANIMATIONS AUX ÉTATS ACTIVÉS --- */
+        .scene.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .scene.open .seal {
+            opacity: 0;
+            transform: translate(-50%, -20%) scale(0) rotate(180deg);
+            pointer-events: none;
+        }
+
+        .scene.open .letter {
+            transform: translateY(-180px) translateZ(50px) scale(1.05);
+            z-index: 4;
+            height: 350px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .scene.open ~ .intro-title {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+
+        /* --- SYSTÈME DE PARTICULES (Canvas) --- */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        /* --- CONTROLE DE LA MUSIQUE --- */
+        .audio-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 110;
+            font-size: 1.2rem;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* --- PANNEAU DE CONFIGURATION (PARAMÈTRES) --- */
+        .control-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            z-index: 100;
+            font-size: 0.8rem;
+            width: 240px;
+            transition: opacity 0.3s;
+        }
+        
+        .control-panel:hover { opacity: 1; }
+        .control-panel h3 { margin-bottom: 10px; color: var(--accent); font-size: 0.9rem; }
+        .control-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .control-row input[type="range"] { width: 120px; accent-color: var(--primary-light); }
+        .control-row select { background: #333; color: white; border: none; padding: 2px 5px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Bouton Audio Discret -->
+    <button class="audio-control" id="audioBtn" onclick="toggleAudio()">🔇</button>
+
+    <!-- Balise Audio (Musique au piano libre de droits par défaut) -->
+    <audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+
+    <div class="intro-title" id="introTitle">
+        <h2>Bonne Fête Maman</h2>
+        <p>Clique sur l'enveloppe pour l'ouvrir</p>
+    </div>
+
+    <!-- Scène 3D Parallaxe -->
+    <div class="scene" id="envelopeScene">
+        <div class="envelope-wrapper" onclick="toggleEnvelope(event)">
+            <div class="envelope">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+                <div class="letter">
+                    <div class="letter-content">
+                        <h1>Chère Maman...</h1>
+                        <p>Dans cette enveloppe se trouve tout l'amour que je te porte. Merci d'éclairer ma vie de ta gentillesse et de ton sourire au quotidien. Tu mérites toute la beauté du monde.</p>
+                        <p style="margin-top: 15px; font-weight: 600; color: var(--primary)">Je t'aime à l'infini ! ❤️</p>
+                    </div>
+                </div>
+                <div class="seal">❤️</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panneau de paramètres en direct -->
+    <div class="control-panel">
+        <h3>⚙️ Paramètres d'effets</h3>
+        <div class="control-row">
+            <label>Quantité :</label>
+            <input type="range" id="paramCount" min="20" max="200" value="10000">
+        </div>
+        <div class="control-row">
+            <label>Vitesse de chute :</label>
+            <input type="range" id="paramSpeed" min="1" max="10" value="4">
+        </div>
+        <div class="control-row">
+            <label>Taille effets :</label>
+            <input type="range" id="paramSize" min="5" max="30" value="15">
+        </div>
+        <div class="control-row">
+            <label>Thème Couleur :</label>
+            <select id="paramTheme" onchange="changeTheme(this.value)">
+                <option value="rubis">Rouge Rubis</option>
+                <option value="or">Or Royal</option>
+                <option value="violet">Améthyste mystique</option>
+            </select>
+        </div>
+    </div>
+     <audio id="bgMusic" loop src="cool.mp3"></audio>
+
+    <script>
+        // --- LOGIQUE DE L'ENVELOPPE, AUDIO ET PARALLAXE 3D ---
+        const scene = document.getElementById('envelopeScene');
+        const music = document.getElementById('bgMusic');
+        const audioBtn = document.getElementById('audioBtn');
+        let isOpened = false;
+
+        // Diminuer un peu le volume initial pour que ce soit doux
+        music.volume = 0.5;
+
+        // Effet inclinaison 3D au mouvement de la souris
+        document.addEventListener('mousemove', (e) => {
+            if (isOpened) return; 
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 15;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 15;
+            scene.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
+        });
+
+        function toggleEnvelope(e) {
+            if(isOpened) return;
+            isOpened = true;
+            scene.classList.add('open');
+            scene.style.transform = `rotateY(0deg) rotateX(10deg)`; 
+            
+            // Lancer la musique au clic (autorisé par les navigateurs)
+            music.play().then(() => {
+                audioBtn.innerHTML = "🎵";
+            }).catch(err => console.log("Lecture auto bloquée, en attente du bouton"));
+
+            // Déclencher l'explosion de particules
+            initExplosion();
+            animateParticles();
+        }
+
+        // Activer / Couper le son manuellement
+        function toggleAudio() {
+            if (music.paused) {
+                music.play();
+                audioBtn.innerHTML = "🎵";
+            } else {
+                music.pause();
+                audioBtn.innerHTML = "🔇";
+            }
+        }
+
+        function changeTheme(theme) {
+            const root = document.documentElement;
+            if(theme === 'rubis') {
+                root.style.setProperty('--primary', '#d90429');
+                root.style.setProperty('--primary-light', '#ef233c');
+                root.style.setProperty('--bg-grad-2', '#3d000f');
+            } else if(theme === 'or') {
+                root.style.setProperty('--primary', '#b5838d');
+                root.style.setProperty('--primary-light', '#e0aaff');
+                root.style.setProperty('--bg-grad-2', '#10002b');
+                root.style.setProperty('--accent', '#ffea00');
+            } else if(theme === 'violet') {
+                root.style.setProperty('--primary', '#7209b7');
+                root.style.setProperty('--primary-light', '#b5179e');
+                root.style.setProperty('--bg-grad-2', '#03045e');
+            }
+        }
+
+        // --- MOTEUR DE PARTICULES (CANVAS) ---
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(isExplosion = false) {
+                this.isExplosion = isExplosion;
+                this.x = isExplosion ? window.innerWidth / 2 : Math.random() * canvas.width;
+                this.y = isExplosion ? window.innerHeight / 2 + 50 : -20;
+                
+                const speedConfig = parseFloat(document.getElementById('paramSpeed').value) / 2;
+                const sizeConfig = parseFloat(document.getElementById('paramSize').value);
+
+                this.size = Math.random() * sizeConfig + 5;
+                
+                if (isExplosion) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 8 + 4;
+                    this.speedX = Math.cos(angle) * velocity;
+                    this.speedY = Math.sin(angle) * velocity - 2; 
+                } else {
+                    this.speedX = Math.random() * 2 - 1;
+                    this.speedY = (Math.random() * 2 + 1) * speedConfig;
+                }
+
+                this.type = Math.floor(Math.random() * 3);
+                const colors = ['#ef233c', '#ffb703', '#ff85a1', '#ffffff', '#ffccd5'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = 1;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 4 - 2;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+
+                if (this.type === 0) { 
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-this.size/2, -this.size/2, -this.size, 0, 0, this.size);
+                    ctx.bezierCurveTo(this.size, 0, this.size/2, -this.size/2, 0, 0);
+                    ctx.fill();
+                } else if (this.type === 1) { 
+                    ctx.fillStyle = 'var(--accent)';
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        ctx.lineTo(0, -this.size);
+                        ctx.rotate(Math.PI / 5);
+                        ctx.lineTo(0, -this.size / 2);
+                        ctx.rotate(Math.PI / 5);
+                    }
+                    ctx.fill();
+                } else { 
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size/3, 0, Math.PI * 2);
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = this.color;
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+
+                if (this.isExplosion) {
+                    this.speedY += 0.1; 
+                    this.opacity -= 0.008; 
+                }
+
+                if (!this.isExplosion && this.y > canvas.height) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                    this.opacity = 1;
+                }
+            }
+        }
+
+        function initExplosion() {
+            const count = document.getElementById('paramCount').value;
+            for (let i = 0; i < count; i++) {
+                particlesArray.push(new Particle(true));
+            }
+            setInterval(() => {
+                const maxParticles = document.getElementById('paramCount').value;
+                if (particlesArray.filter(p => !p.isExplosion).length < maxParticles) {
+                    particlesArray.push(new Particle(false));
+                }
+            }, 50);
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                if (particlesArray[i].isExplosion && particlesArray[i].opacity <= 0) {
+                    particlesArray.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+    </script>
+</body>
+</html>

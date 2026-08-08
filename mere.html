@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonne Fête Maman ! ❤️</title>
+    <style>
+        :root {
+            --bg-color: #ffeef2;
+            --heart-color: #ff4d6d;
+            --envelope-color: #ffb3c1;
+            --envelope-dark: #ff85a1;
+            --paper-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+        }
+
+        /* Conteneur de l'enveloppe */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: var(--envelope-color);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Le rabat de l'enveloppe */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 3;
+            border-top: 130px solid var(--envelope-dark);
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            transform-origin: top;
+            transition: transform 0.5s 0.3s ease;
+            border-radius: 4px;
+        }
+
+        /* Les côtés de l'enveloppe */
+        .envelope::after {
+            content: "";
+            position: absolute;
+            z-index: 2;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-bottom: 100px solid var(--envelope-color);
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            filter: brightness(0.95);
+        }
+
+        /* La lettre à l'intérieur */
+        .letter {
+            position: absolute;
+            bottom: 5px;
+            left: 15px;
+            width: 270px;
+            height: 180px;
+            background-color: var(--paper-color);
+            border-radius: 8px;
+            z-index: 1;
+            transition: transform 0.6s ease, z-index 0s 0.6s;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .letter h1 {
+            font-size: 1.4rem;
+            color: var(--heart-color);
+            margin-bottom: 10px;
+            font-family: 'Georgia', serif;
+        }
+
+        .letter p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* Petit cœur de fermeture */
+        .heart-seal {
+            position: absolute;
+            top: 110px;
+            left: 135px;
+            width: 30px;
+            height: 30px;
+            background-color: var(--heart-color);
+            z-index: 4;
+            transform: rotate(-45deg);
+            transition: transform 0.5s ease, opacity 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .heart-seal::before, .heart-seal::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: var(--heart-color);
+            border-radius: 50%;
+        }
+
+        .heart-seal::before { top: -15px; left: 0; }
+        .heart-seal::after { left: 15px; top: 0; }
+
+        /* --- ÉTAT OUVERT --- */
+        .envelope-wrapper.open {
+            animation: none;
+        }
+
+        .envelope-wrapper.open .envelope::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .letter {
+            transform: translateY(-130px) scale(1.1);
+            z-index: 5;
+            height: 220px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .envelope-wrapper.open .heart-seal {
+            opacity: 0;
+            transform: scale(0) rotate(-45deg);
+        }
+
+        /* Animation des particules (pluie de cœurs) */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            100% {
+                transform: translateY(110vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Texte d'instruction */
+        .instruction {
+            position: absolute;
+            bottom: 40px;
+            font-size: 1.1rem;
+            color: #ff758f;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+            transition: opacity 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instruction" id="instruction">Clique sur l'enveloppe maman... ❤️</div>
+
+    <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()">
+        <div class="envelope"></div>
+        <div class="heart-seal"></div>
+        <div class="letter">
+            <h1>Bonne Fête Maman !</h1>
+            <p>Merci pour tout ton amour, ta tendresse et ton soutien de chaque jour. Tu es la meilleure des mamans. <br><br><strong>Je t'aime de tout mon cœur ! ❤️</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function openEnvelope() {
+            const wrapper = document.getElementById('envelopeWrapper');
+            const instruction = document.getElementById('instruction');
+            
+            // Si l'enveloppe est déjà ouverte, on ne fait rien
+            if(wrapper.classList.contains('open')) return;
+
+            wrapper.classList.add('open');
+            instruction.style.opacity = '0';
+
+            // Lancer la pluie de cœurs magique
+            setTimeout(() => {
+                setInterval(createHeart, 150);
+            }, 600);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('particle');
+            
+            // Style du cœur en pur CSS
+            heart.style.width = Math.random() * 15 + 10 + 'px';
+            heart.style.height = heart.style.width;
+            heart.style.backgroundColor = ['#ff4d6d', '#ff758f', '#ff85a1', '#f72585'][Math.floor(Math.random() * 4)];
+            heart.style.transform = 'rotate(-45deg)';
+            
+            // Création de la forme de cœur
+            const before = document.createElement('div');
+            const after = document.createElement('div');
+            [before, after].forEach(el => {
+                el.style.position = 'absolute';
+                el.style.width = '100%';
+                el.style.height = '100%';
+                el.style.backgroundColor = heart.style.backgroundColor;
+                el.style.borderRadius = '50%';
+            });
+            before.style.top = '-50%';
+            after.style.left = '50%';
+            heart.appendChild(before);
+            heart.appendChild(after);
+
+            // Position aléatoire en largeur
+            heart.style.left = Math.random() * 100 + 'vw';
+            // Vitesse aléatoire
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            
+            document.body.appendChild(heart);
+
+            // Supprimer le cœur après l'animation
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
